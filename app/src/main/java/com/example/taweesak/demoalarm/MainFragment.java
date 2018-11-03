@@ -67,10 +67,25 @@ public class MainFragment extends Fragment {
                 calendar.set(Calendar.HOUR_OF_DAY, hourInt);
                 calendar.set(Calendar.MINUTE, minuteInt);
 
-                Log.d(tag,"calendar ==> "+calendar.getTime());
+                Log.d(tag, "calendar ==> " + calendar.getTime());
 
                 // Method
-                sentValueToReceiver(calendar);
+                //sentValueToReceiver(calendar);
+
+                // set to database
+                MyManage myManage = new MyManage(getActivity());
+                myManage.addValueToSQLite(calendar.getTime().toString(),
+                        Integer.toString(dayInt[0]),
+                        Integer.toString(monthInt[0]),
+                        Integer.toString(hourInt),
+                        Integer.toString(minuteInt));
+
+                //Replace to Show list Fragment
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.contentMainFragment, new ShowListFragment())
+                        .addToBackStack(null) // back to before fragment
+                        .commit();
 
 
             }
@@ -80,15 +95,17 @@ public class MainFragment extends Fragment {
     private void sentValueToReceiver(Calendar notiCalendar) {
         //??????????
 
+        // random number to request number
         Random random = new Random();
         int requestInt = random.nextInt(100);
 
-        Intent intent = new Intent(getActivity(),MyReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),requestInt,
-                intent,0);
+
+        Intent intent = new Intent(getActivity(), MyReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), requestInt,
+                intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP,notiCalendar.getTimeInMillis(),pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, notiCalendar.getTimeInMillis(), pendingIntent);
 
         Toast.makeText(getActivity(), "set", Toast.LENGTH_SHORT).show();
 
