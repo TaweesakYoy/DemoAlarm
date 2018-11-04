@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.ListAlarmViewHolder>{
+public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.ListAlarmViewHolder> {
 
     private Context mContext;
     private ArrayList<String> notiStringArrayList, dayStringArrayList, monthStringArrayList,
@@ -36,14 +36,33 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
     @Override
     public ListAlarmViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
+        //inflate = xml ===>  ตัวแปร java
+        View view = layoutInflater.inflate(R.layout.layout_list_alarm, viewGroup, false);
+        ListAlarmViewHolder listAlarmViewHolder = new ListAlarmViewHolder(view);
 
-
-
-        return null;
+        return listAlarmViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListAlarmViewHolder listAlarmViewHolder, int i) {
+
+        String notiString = notiStringArrayList.get(i);
+        String dayString = dayStringArrayList.get(i);
+        String monthString = monthStringArrayList.get(i);
+        String hourString = hourStringArrayList.get(i);
+        String minuteteString = minuteStringArrayList.get(i);
+
+        listAlarmViewHolder.textViewNoti.setText(notiString);
+        listAlarmViewHolder.textViewDay.setText("Day = "+dayString);
+
+        String realMonthString = Integer.toString(Integer.parseInt(monthString)+1);
+        listAlarmViewHolder.textViewDay.setText("Month = "+realMonthString);
+
+        listAlarmViewHolder.textViewMonth.setText("HH = "+hourString);
+        listAlarmViewHolder.textViewHour.setText("Min = "+minuteteString);
+
+
+
 
     }
 
@@ -53,10 +72,10 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
     }
 
 
-    public class ListAlarmViewHolder extends RecyclerView.ViewHolder{
+    public class ListAlarmViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textViewNoti,textViewDay,
-                textViewMonth,textViewHour,textViewMinute;
+        private TextView textViewNoti, textViewDay,
+                textViewMonth, textViewHour, textViewMinute;
 
         public ListAlarmViewHolder(@NonNull View itemView) {
             super(itemView);
