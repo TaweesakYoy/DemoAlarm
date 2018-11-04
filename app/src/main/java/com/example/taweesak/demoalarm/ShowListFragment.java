@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +32,28 @@ public class ShowListFragment extends Fragment {
 
         createRecyclerview();
 
+//        Create Toolbar ====command /
+        createToolbar();
 
     }// Main Method / option+command + M
+
+    private void createToolbar() {
+        Toolbar toolbar = getView().findViewById(R.id.toolbarListAlarm);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Show All Alarm");
+
+        ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().popBackStack(); // ถอยหลังกลับ
+            }
+        });
+
+
+    }
 
     private void createRecyclerview() {
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerViewListAlarm);
@@ -62,10 +83,12 @@ public class ShowListFragment extends Fragment {
             ArrayList<String> monthiStringArrayList = new ArrayList<>();
             ArrayList<String> hourStringArrayList = new ArrayList<>();
             ArrayList<String> minuteStringArrayList = new ArrayList<>();
+            final ArrayList<String> idStringArrayList = new ArrayList<>();
 
 
             for (int i = 0; i < cursor.getCount(); i++) { // getCount คือ cursor ไปเช็ค database จากบันทัดบนแล้ว sqLiteDatabase.rawQuery
 
+                idStringArrayList.add(cursor.getString(0));
                 notiStringArrayList.add(cursor.getString(1));
                 dayStringArrayList.add(cursor.getString(2));
                 monthiStringArrayList.add(cursor.getString(3));
@@ -91,9 +114,30 @@ public class ShowListFragment extends Fragment {
                     dayStringArrayList,
                     monthiStringArrayList,
                     hourStringArrayList,
-                    minuteStringArrayList);
+                    minuteStringArrayList,
+                    new OnClickListItem() {
+                        @Override
+                        public void OnClickListItem(View view, int position) {
+                            Log.d("4NovV2", "id Send ==> " + idStringArrayList.get(position));
+
+//                            Replace Fragment and put Value
+
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.contentMainFragment,
+                                            EditAndDeleteFragment.editAndDeleteInstante(idStringArrayList.get(position)))
+                                    .addToBackStack(null) // Back to after page open
+                                    .commit();
+
+
+
+
+                        }
+                    });
 
             recyclerView.setAdapter(listAlarmAdapter);
+
+            cursor.close(); // Close Database
 
         } catch (Exception e) {
             e.printStackTrace();

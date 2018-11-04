@@ -17,7 +17,25 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
             hourStringArrayList, minuteStringArrayList;
     private LayoutInflater layoutInflater;
 
-    public ListAlarmAdapter(Context mContext,
+    private OnClickListItem onClickListItem;
+
+    public ListAlarmAdapter(Context mContext, ArrayList<String> notiStringArrayList,
+                            ArrayList<String> dayStringArrayList,
+                            ArrayList<String> monthStringArrayList,
+                            ArrayList<String> hourStringArrayList,
+                            ArrayList<String> minuteStringArrayList,
+                            OnClickListItem onClickListItem) {
+
+        this.layoutInflater = LayoutInflater.from(mContext);
+        this.notiStringArrayList = notiStringArrayList;
+        this.dayStringArrayList = dayStringArrayList;
+        this.monthStringArrayList = monthStringArrayList;
+        this.hourStringArrayList = hourStringArrayList;
+        this.minuteStringArrayList = minuteStringArrayList;
+        this.onClickListItem = onClickListItem;
+    }
+
+    /*public ListAlarmAdapter(Context mContext,
                             ArrayList<String> notiStringArrayList,
                             ArrayList<String> dayStringArrayList,
                             ArrayList<String> monthStringArrayList,
@@ -30,7 +48,8 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
         this.monthStringArrayList = monthStringArrayList;
         this.hourStringArrayList = hourStringArrayList;
         this.minuteStringArrayList = minuteStringArrayList;
-    } // Constructor Class
+
+    } */// Constructor Class
 
     @NonNull
     @Override
@@ -44,7 +63,7 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListAlarmViewHolder listAlarmViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ListAlarmViewHolder listAlarmViewHolder, int i) {
 
         String notiString = notiStringArrayList.get(i);
         String dayString = dayStringArrayList.get(i);
@@ -61,10 +80,18 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
         listAlarmViewHolder.textViewMonth.setText("HH = "+hourString);
         listAlarmViewHolder.textViewHour.setText("Min = "+minuteteString);
 
+//        Add After Create OnClickListItem
+
+        listAlarmViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickListItem.OnClickListItem(view,listAlarmViewHolder.getAdapterPosition());
+            }
+        });
 
 
 
-    }
+    } // OnBind
 
     @Override
     public int getItemCount() {

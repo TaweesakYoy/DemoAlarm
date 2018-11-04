@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,6 +47,40 @@ public class MainFragment extends Fragment {
 
         // Set Controller
         setController();
+
+//        Toolbar controler
+        toolbarControler();
+    }// Main Method
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.itemShowList){
+            
+            replaceFragment();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_main,menu);
+
+
+    }
+
+    private void toolbarControler() {
+        Toolbar toolbar = getView().findViewById(R.id.toolbarMain);
+        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
+
+        setHasOptionsMenu(true); // อนุญาตให้เอา toolbar มาใส่
 
     }
 
@@ -79,17 +117,20 @@ public class MainFragment extends Fragment {
                         Integer.toString(monthInt[0]),
                         Integer.toString(hourInt),
                         Integer.toString(minuteInt));
-
-                //Replace to Show list Fragment
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.contentMainFragment, new ShowListFragment())
-                        .addToBackStack(null) // back to before fragment
-                        .commit();
+                replaceFragment();
 
 
             }
         });
+    }
+
+    private void replaceFragment() {
+        //Replace Fragment
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.contentMainFragment, new ShowListFragment())
+                .addToBackStack(null) // back to before fragment
+                .commit();
     }
 
     private void sentValueToReceiver(Calendar notiCalendar) {
