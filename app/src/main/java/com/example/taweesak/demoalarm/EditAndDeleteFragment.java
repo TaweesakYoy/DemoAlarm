@@ -76,7 +76,17 @@ public class EditAndDeleteFragment extends Fragment {
 
     private void deleteValueSQLite() {
         // todo
+        try {
 
+            SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
+                    Context.MODE_PRIVATE,null);
+            sqLiteDatabase.delete("alarmTABLE","id="+idString,null);
+
+            back();
+
+        }catch (Exception e){
+            Log.d(tag,"e delete ==> "+e.toString());
+        }
 
     }
 
@@ -114,12 +124,17 @@ public class EditAndDeleteFragment extends Fragment {
             sqLiteDatabase.update("alarmTABLE",contentValues,"id=" + idString,null);
 
 
-            getActivity().getSupportFragmentManager().popBackStack();// back to first page
+            back();
+
 
         } catch (Exception e) {
             Log.d(tag, "e editValue ==> " + e.toString());
         }
 
+    }
+
+    private void back() {
+        getActivity().getSupportFragmentManager().popBackStack();// back to first page
     }
 
     @Override
@@ -185,7 +200,7 @@ public class EditAndDeleteFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getSupportFragmentManager().popBackStack();
+                back();
             }
         });
 
