@@ -18,7 +18,7 @@ public class EditAndDeleteFragment extends Fragment {
 
     private String idString;
 
-    private EditText notiEditText,dayEditText,monthEditText,hourEditText,minuteEditText;
+    private EditText notiEditText, dayEditText, monthEditText, hourEditText, minuteEditText;
 
     private String tag = "4NovV2";
 
@@ -26,12 +26,12 @@ public class EditAndDeleteFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static EditAndDeleteFragment editAndDeleteInstante(String idString){
+    public static EditAndDeleteFragment editAndDeleteInstante(String idString) {
         EditAndDeleteFragment editAndDeleteFragment = new EditAndDeleteFragment();
         Bundle bundle = new Bundle();
         bundle.putString("MyAlarm", idString);
         editAndDeleteFragment.setArguments(bundle);
-        return  editAndDeleteFragment;
+        return editAndDeleteFragment;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class EditAndDeleteFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         idString = getArguments().getString("MyAlarm");
-        Log.d("4NovV2","id at Edit ==> "+idString);
+        Log.d("4NovV2", "id at Edit ==> " + idString);
 
 //        Create Toolbar
         createToolbar();
@@ -56,13 +56,13 @@ public class EditAndDeleteFragment extends Fragment {
         hourEditText = getView().findViewById(R.id.editTextHour);
         minuteEditText = getView().findViewById(R.id.editTextMinute);
 
-        try{
+        try {
             // Connect Database
             SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
                     Context.MODE_PRIVATE,
                     null);
 
-            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM alarmTABLE WHERE id="+ idString,null);
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM alarmTABLE WHERE id=" + idString, null);
             cursor.moveToFirst();
 
             String[] strings = new String[cursor.getColumnCount()];
@@ -71,15 +71,22 @@ public class EditAndDeleteFragment extends Fragment {
 
                 strings[i] = cursor.getString(i);
 
-
-            }
-
+                Log.d(tag, "string[" + i + "]======= >" + strings[i]);
 
 
-        }catch (Exception e){
-            Log.d(tag,"e Error ==> "+e.toString());
+            }// for
+
+            // init data
+            notiEditText.setText(strings[1]);
+            dayEditText.setText(strings[2]);
+            monthEditText.setText(strings[3]);
+            hourEditText.setText(strings[4]);
+            minuteEditText.setText(strings[5]);
+
+
+        } catch (Exception e) {
+            Log.d(tag, "e Error ==> " + e.toString());
         }
-
 
 
     }
