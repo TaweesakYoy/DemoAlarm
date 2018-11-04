@@ -1,6 +1,7 @@
 package com.example.taweesak.demoalarm;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -48,6 +52,84 @@ public class EditAndDeleteFragment extends Fragment {
         showData();
 
     } // Main Method
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.itemEditList) {
+
+            editValueSQLite();
+
+            return true;
+        }
+
+        if (item.getItemId() == R.id.itemDeleteList) {
+
+            deleteValueSQLite();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void deleteValueSQLite() {
+        // todo
+
+
+    }
+
+    private void editValueSQLite() {
+
+        // todo edit data
+        String notiString = notiEditText.getText().toString().trim();
+        String dayString = dayEditText.getText().toString().trim();
+        String monthString = monthEditText.getText().toString().trim();
+        String hourString = hourEditText.getText().toString().trim();
+        String minuteString = minuteEditText.getText().toString().trim();
+
+        try {
+
+            SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
+                    Context.MODE_PRIVATE, null);
+
+            // Update Data
+
+//            Edit by SQL Command
+            /*sqLiteDatabase.execSQL("UPDATE alarmTABLE SET NotiTime = " + "'"+notiString +"',"+
+                    " Day = "+"'"+dayString+"',"+
+                    " Month = "+"'"+monthString+"',"+
+                    " Hour = "+"'"+hourString+"',"+
+                    " Minute = "+"'"+minuteString+"'"+
+                    " WHERE id="+"'"+idString+"'" );*/
+
+//            Edit by ContainValue
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("NotiTime", notiString);
+            contentValues.put("Day", dayString);
+            contentValues.put("Month", monthString);
+            contentValues.put("Hour", hourString);
+            contentValues.put("Minute", minuteString);
+            sqLiteDatabase.update("alarmTABLE",contentValues,"id=" + idString,null);
+
+
+            getActivity().getSupportFragmentManager().popBackStack();// back to first page
+
+        } catch (Exception e) {
+            Log.d(tag, "e editValue ==> " + e.toString());
+        }
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_edit, menu);
+
+
+    }
 
     private void showData() {
         notiEditText = getView().findViewById(R.id.editTextNoti);
@@ -106,6 +188,8 @@ public class EditAndDeleteFragment extends Fragment {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+
+        setHasOptionsMenu(true); //ขออนุญเปิด menu
 
 
     }
