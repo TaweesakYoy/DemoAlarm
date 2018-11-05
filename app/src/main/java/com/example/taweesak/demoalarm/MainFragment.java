@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -27,6 +28,7 @@ import java.util.Random;
 public class MainFragment extends Fragment {
 
     private CalendarView calendarView;
+    private TimePicker alarmTimePicker;
     private String tag = "3NovV1";
     private final int[] dayInt = new int[1];
     private final int[] monthInt = new int[1];
@@ -85,6 +87,14 @@ public class MainFragment extends Fragment {
     }
 
     private void setController() {
+
+        alarmTimePicker = getView().findViewById(R.id.alarmTimePicker);
+
+        // New Add ****************
+        final int hour = alarmTimePicker.getCurrentHour();
+        final int minute = alarmTimePicker.getCurrentMinute();;
+
+
         Button button = getView().findViewById(R.id.buttonSet);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,28 +105,39 @@ public class MainFragment extends Fragment {
                 Log.d(tag, "Tear ==> " + yearInt[0]);
                 Log.d(tag, "Hour ==> " + hourInt);
 
-                minuteInt = minuteInt + 2; // เวลาที่ตั้ง
+                //minuteInt = minuteInt + 2; // เวลาที่ตั้ง
                 Log.d(tag, "Minute ==> " + minuteInt);
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.DAY_OF_MONTH, dayInt[0]);
                 calendar.set(Calendar.MONTH, monthInt[0]);
                 calendar.set(Calendar.YEAR, yearInt[0]);
-                calendar.set(Calendar.HOUR_OF_DAY, hourInt);
-                calendar.set(Calendar.MINUTE, minuteInt);
+                /*calendar.set(Calendar.HOUR_OF_DAY, hourInt);
+                calendar.set(Calendar.MINUTE, minuteInt);*/
+
+                // New Add ****************
+                calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+                calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
 
                 Log.d(tag, "calendar ==> " + calendar.getTime());
+                Toast.makeText(getActivity(), "set"+calendar.getTime(), Toast.LENGTH_SHORT).show();
 
                 // Method
-                //sentValueToReceiver(calendar);
+                sentValueToReceiver(calendar);
 
                 // set to database
                 MyManage myManage = new MyManage(getActivity());
                 myManage.addValueToSQLite(calendar.getTime().toString(),
                         Integer.toString(dayInt[0]),
                         Integer.toString(monthInt[0]),
-                        Integer.toString(hourInt),
-                        Integer.toString(minuteInt));
+                        /*Integer.toString(hourInt),
+                        Integer.toString(minuteInt));*/
+
+                        // New Add ****************
+                        Integer.toString(alarmTimePicker.getCurrentHour()),
+                        Integer.toString(alarmTimePicker.getCurrentMinute()));
+
+                // Method
                 replaceFragment();
 
 
@@ -141,9 +162,14 @@ public class MainFragment extends Fragment {
         int requestInt = random.nextInt(100);
 
 
+
+
         Intent intent = new Intent(getActivity(), MyReceiver.class);
+        intent.putExtra("Message", notiCalendar.getTime().toString());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), requestInt,
                 intent, 0);
+
+
 
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, notiCalendar.getTimeInMillis(), pendingIntent);

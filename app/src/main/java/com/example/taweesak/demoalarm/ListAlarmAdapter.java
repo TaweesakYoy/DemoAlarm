@@ -75,10 +75,21 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
         listAlarmViewHolder.textViewDay.setText("Day = "+dayString);
 
         String realMonthString = Integer.toString(Integer.parseInt(monthString)+1);
-        listAlarmViewHolder.textViewDay.setText("Month = "+realMonthString);
+        listAlarmViewHolder.textViewMonth.setText("Month = "+realMonthString);
 
-        listAlarmViewHolder.textViewMonth.setText("HH = "+hourString);
-        listAlarmViewHolder.textViewHour.setText("Min = "+minuteteString);
+        listAlarmViewHolder.textViewHour.setText("HH = "+hourString);
+
+        // Convert minute
+        int realMinuteString  = Integer.parseInt(minuteteString.toString());
+
+        if(realMinuteString < 10){
+            minuteteString = "0"+minuteteString.toString();
+        }else{
+            minuteteString.toString();
+        }
+        listAlarmViewHolder.textViewMinute.setText("Min = "+minuteteString);
+
+        // End Convert
 
 //        Add After Create OnClickListItem
 

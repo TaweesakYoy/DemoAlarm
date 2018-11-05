@@ -9,12 +9,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/buttonSet"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="NotSibling">
 
         <!--Toolbar-->
         <include
             android:id="@+id/toolbarMain"
             layout="@layout/toolbar_main" />
+
+        <Button
+            android:id="@+id/buttonSet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Set" />
+
+        <TimePicker
+            android:id="@+id/alarmTimePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <CalendarView
             android:id="@+id/calendarViewSet"
@@ -23,12 +36,6 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonSet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="Set" />
 
 
 </RelativeLayout>

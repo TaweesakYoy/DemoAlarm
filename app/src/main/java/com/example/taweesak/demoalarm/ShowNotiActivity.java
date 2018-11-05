@@ -8,13 +8,20 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class ShowNotiActivity extends AppCompatActivity {
+
+    String messageString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_noti);
+
+        messageString = getIntent().getStringExtra("Message");
+        TextView textView = findViewById(R.id.tv_showAlarm);
+        textView.setText(messageString);
 
         showNotification();
 
@@ -25,7 +32,7 @@ public class ShowNotiActivity extends AppCompatActivity {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.ic_action_noti);
         builder.setTicker("Ticker Notification");
-        builder.setContentTitle("Title Notification");
+        builder.setContentTitle(messageString);
         builder.setContentText("Text Nofication");
         builder.setWhen(System.currentTimeMillis()); // show Noti current time
         builder.setAutoCancel(false);
